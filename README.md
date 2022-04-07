@@ -1,2 +1,2 @@
 # File-Sync
-File Synchronisation Software in C#
+File Synchronisation Console App in C#
