@@ -1,0 +1,14 @@
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.exe
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.deps.json
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.runtimeconfig.json
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.runtimeconfig.dev.json
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.dll
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\bin\Debug\netcoreapp3.1\FileSync.pdb
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.csproj.AssemblyReference.cache
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.AssemblyInfoInputs.cache
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.AssemblyInfo.cs
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.csproj.CoreCompileInputs.cache
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.dll
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.pdb
+C:\Users\conno\Documents\GitHub\File-Sync\FileSync\obj\Debug\netcoreapp3.1\FileSync.genruntimeconfig.cache
