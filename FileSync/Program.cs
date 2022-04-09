@@ -33,6 +33,7 @@ namespace FileSync
                 Console.WriteLine("7... Database Operation: Read date modified of a file");
                 Console.WriteLine("8... Database Operation: Update file");
                 Console.WriteLine("9... Database Operation: Delete file");
+                Console.WriteLine("10... Date Time Testing");
                 Console.WriteLine();
                 Console.WriteLine("-------------------------------------------------------");
 
@@ -93,6 +94,12 @@ namespace FileSync
                         Data.ExecuteSQL("sqlitedatabase.db", Data.DeleteFileCommandString(file9));
                         break;
 
+                    case "10":
+                        // do something with date time
+
+
+                        break;
+
                     default:
                         Console.WriteLine("Invalid choice.");
                         break;
@@ -123,7 +130,7 @@ namespace FileSync
             finally { }
         }
 
-        public static void GetFiles(List<string> files, string destinationFileLocation)
+        public static void GetFiles(List<string> files, string destinationRootDirectory)
         {
             foreach (string s in files)
             {
@@ -131,77 +138,22 @@ namespace FileSync
 
                 try
                 {
+                    string offlinePath = convertSourceFilePathToOfflineFilePath(s, destinationRootDirectory);
 
-                    if (s.Contains(@"W:\"))
+                    if (offlinePath != null)
                     {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"W:\", destinationFileLocation + @"\7plus\"))))
+                        string directory = Path.GetDirectoryName(offlinePath);
+                        
+                        if (Directory.Exists(directory))
                         {
-                            fi1.CopyTo(s.Replace(@"W:\", destinationFileLocation + @"\7plus\"));
-                        }
+                            if (!File.Exists(offlinePath))
+                            {
+                                downloadFile(fi1, offlinePath);
+                            }
+                        } 
                         else
                         {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"W:\", destinationFileLocation + @"\7plus\")));
-                            fi1.CopyTo(s.Replace(@"W:\", destinationFileLocation + @"\7plus\"));
-                        }
-                    }
-                    else if (s.Contains(@"X:\"))
-                    {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"X:\", destinationFileLocation + @"\8plus\"))))
-                        {
-                            fi1.CopyTo(s.Replace(@"X:\", destinationFileLocation + @"\8plus\"));
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"X:\", destinationFileLocation + @"\8plus\")));
-                            fi1.CopyTo(s.Replace(@"X:\", destinationFileLocation + @"\8plus\"));
-                        }
-                    }
-                    else if (s.Contains(@"Y:\"))
-                    {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"Y:\", destinationFileLocation + @"\9plus\"))))
-                        {
-                            fi1.CopyTo(s.Replace(@"Y:\", destinationFileLocation + @"\9plus\"));
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"Y:\", destinationFileLocation + @"\9plus\")));
-                            fi1.CopyTo(s.Replace(@"Y:\", destinationFileLocation + @"\9plus\"));
-                        }
-                    }
-                    else if (s.Contains(@"Z:\"))
-                    {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"Z:\", destinationFileLocation + @"\10plus\"))))
-                        {
-                            fi1.CopyTo(s.Replace(@"Z:\", destinationFileLocation + @"\10plus\"));
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"Z:\", destinationFileLocation + @"\10plus\")));
-                            fi1.CopyTo(s.Replace(@"Z:\", destinationFileLocation + @"\10plus\"));
-                        }
-                    }
-                    else if (s.Contains(@"L:\"))
-                    {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"L:\", destinationFileLocation + @"\11plus\"))))
-                        {
-                            fi1.CopyTo(s.Replace(@"L:\", destinationFileLocation + @"\11plus\"));
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"L:\", destinationFileLocation + @"\11plus\")));
-                            fi1.CopyTo(s.Replace(@"L:\", destinationFileLocation + @"\11plus\"));
-                        }
-                    }
-                    else if (s.Contains(@"M:\"))
-                    {
-                        if (Directory.Exists(Path.GetDirectoryName(s.Replace(@"M:\", destinationFileLocation + @"\12plus\"))))
-                        {
-                            fi1.CopyTo(s.Replace(@"M:\", destinationFileLocation + @"\12plus\"));
-                        }
-                        else
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(s.Replace(@"M:\", destinationFileLocation + @"\12plus\")));
-                            fi1.CopyTo(s.Replace(@"M:\", destinationFileLocation + @"\12plus\"));
+                            Directory.CreateDirectory(directory);
                         }
                     }
                 }
@@ -210,6 +162,11 @@ namespace FileSync
                     Console.WriteLine($"The process failed: {e.ToString()}");
                 }
             }
+        }
+        
+        private static void downloadFile(FileInfo fi, string destinationPath)
+        {
+            fi.CopyTo(destinationPath);
         }
         
         public static List<string> GetRequiredFilesList(string csvPath)
@@ -253,5 +210,49 @@ namespace FileSync
         }
 
         
+
+
+        private static string convertSourceFilePathToOfflineFilePath(string sourcePath, string destinationRootDirectory)
+        {
+            string mappedDrive = sourcePath.Substring(0, 3);
+            string offlinePath;
+            
+            switch (mappedDrive)
+            {
+                case @"W:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\7plus\");
+                    break;
+                
+                case @"X:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\8plus\");
+                    break;
+                
+                case @"Y:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\9plus\");
+                    break;
+                
+                case @"Z:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\10plus\");
+                    break;
+                
+                case @"L:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\11plus\");
+                    break;
+                
+                case @"M:\":
+                    offlinePath = sourcePath.Replace(mappedDrive, destinationRootDirectory + @"\12plus\");
+                    break;
+                
+                default:
+                    // ignore files that aren't mapped to one of the above drives
+                    return null;
+            }
+
+            return offlinePath;
+        }
+        
     }
+
+    
 }
+
