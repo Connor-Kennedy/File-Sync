@@ -9,6 +9,8 @@ namespace FileSync
 {
     static class Data
     {
+        private static string connectionString = "sqlitedatabase.db";
+
         // create file table
         public static string CreateFilesTableCommandString()
         {
@@ -47,58 +49,148 @@ namespace FileSync
         }
 
         // create file entry
-        public static string AddFileCommandString(string fullFilePath, string dateModified)
+        public static string AddFile(string fullFilePath, string dateModified)
         {
-            string command = 
-                $@"
-                INSERT INTO Files (FullFilePath, DateModified)
-                VALUES ('{fullFilePath}','{dateModified}');
-                ";
-            
-            return command;
+            using (var connection = new SQLiteConnection($"Data Source={Data.connectionString}"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    $@"
+                        INSERT INTO Files (FullFilePath, DateModified)
+                        VALUES ('{fullFilePath}','{dateModified}');
+                    ";
+
+                try
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return reader.GetString(0);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+                }
+                return null;
+            }
         }
         
         // read file entry        
-        public static string GetFileDateModifiedCommandString(string fullFilePath)
+        public static string GetFileDateModified(string fullFilePath)
         {
-            string command =
-                $@"
-                    SELECT DateModified
-                    FROM Files
-                    WHERE FullFilePath = '{fullFilePath}';
-                ";
+            using (var connection = new SQLiteConnection($"Data Source={Data.connectionString}"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = 
+                    $@"
+                        SELECT DateModified
+                        FROM Files
+                        WHERE FullFilePath = '{fullFilePath}';
+                    ";
 
-            return command;
+                try
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            //there will only be 1 index for above query...
+                            return reader.GetString(0);                            
+                        }
+                    }
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+
+                }
+                
+                return null;
+            
+            }
+            
+            
+            
+            
+
+            
+
+
         }
         
         // update file entry
-        public static string UpdateFileDateModifiedCommandString(string fullFilePath, string dateModified)
+        public static string UpdateFileDateModified(string fullFilePath, string dateModified)
         {
-            string command = 
-                $@"
-                UPDATE Files
-                SET DateModified = '{dateModified}'
-                WHERE FullFilePath = '{fullFilePath}';
-                ";
-
-            return command;
+            using (var connection = new SQLiteConnection($"Data Source={Data.connectionString}"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    $@"
+                        UPDATE Files
+                        SET DateModified = '{dateModified}'
+                        WHERE FullFilePath = '{fullFilePath}';
+                    ";
+                try
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return reader.GetString(0);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+                }
+                return null;
+            }
         }
 
         // delete file entry
-        public static string DeleteFileCommandString(string fullFilePath)
+        public static string DeleteFile(string fullFilePath)
         {
-            string command = 
-                $@"
-                DELETE FROM Files
-                WHERE FullFilePath = '{fullFilePath}';
-                ";
-            
-            return command;
+            using (var connection = new SQLiteConnection($"Data Source={Data.connectionString}"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText =
+                    $@"
+                        DELETE FROM Files
+                        WHERE FullFilePath = '{fullFilePath}';
+                        ";
+                try
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return reader.GetString(0);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    return null;
+                }
+                return null;
+            }
         }
 
-        public static void ExecuteSQL(string connectionString, string commandString)
+        public static void ExecuteSQL(string commandString)
         {
-            using (var connection = new SQLiteConnection($"Data Source={connectionString}"))
+            using (var connection = new SQLiteConnection($"Data Source={Data.connectionString}"))
             {
                 connection.Open();
 
