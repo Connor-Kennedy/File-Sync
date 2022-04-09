@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 
+
+
 namespace FileSync
 {
     class Program
@@ -15,9 +17,88 @@ namespace FileSync
             CreateDirectory(offlineFilesLocation);
             CreateDirectory(sourceFilesLocation);
 
-            List<string> requiredFiles = GetRequiredFilesList(csvPath);
-                
-            GetFiles(requiredFiles, offlineFilesLocation);
+
+            while (true)
+            {
+                Console.WriteLine("-------------------------------------------------------");
+                Console.WriteLine();
+                Console.WriteLine("Main Menu");
+                Console.WriteLine();
+                Console.WriteLine("1... Print Hello World!");
+                Console.WriteLine("2... Get Server Files");
+                Console.WriteLine("3... Database Operation: Create Files Table");
+                Console.WriteLine("4... Database Operation: Read Files DB Table");
+                Console.WriteLine("5... Database Operation: Delete Files DB Table");
+                Console.WriteLine("6... Database Operation: Create test file");
+                Console.WriteLine("7... Database Operation: Read date modified of a file");
+                Console.WriteLine("8... Database Operation: Update file");
+                Console.WriteLine("9... Database Operation: Delete file");
+                Console.WriteLine();
+                Console.WriteLine("-------------------------------------------------------");
+
+                switch (Console.ReadLine())
+                {
+                    case "1":
+                        Console.WriteLine("Hello World");
+                        break;
+
+                    case "2":
+                        Console.WriteLine("Get CSV Files");
+                        List<string> requiredFiles;
+                        try
+                        {
+                            requiredFiles = GetRequiredFilesList(csvPath);
+                            GetFiles(requiredFiles, offlineFilesLocation);
+
+                        }
+                        catch (System.IO.IOException e)
+                        {
+                            Console.WriteLine($"Failure: Check VPN connection");
+                            Console.WriteLine(e);
+                            Console.WriteLine();
+                        }
+                        break;
+
+                    case "3":
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.CreateFilesTableCommandString());
+                        break;
+                    case "4":
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.GetFilesCommandString());
+                        break;
+                    case "5":
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.DeleteFilesTableCommand());
+                        break;
+                    case "6":
+                        Console.Write("File:");
+                        string file6 = Console.ReadLine();
+                        Console.Write("DateModified:");
+                        string file6Date = Console.ReadLine();
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.AddFileCommandString(file6, file6Date));
+                        break;
+                    case "7":
+                        Console.Write("File:");
+                        string file7 = Console.ReadLine();
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.GetFileDateModifiedCommandString(file7));
+                        break;
+                    case "8":
+                        Console.Write("File:");
+                        string file8 = Console.ReadLine();
+                        Console.Write("New DateModified:");
+                        string date8 = Console.ReadLine();
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.UpdateFileDateModifiedCommandString(file8, date8));
+                        break;
+                    case "9":
+                        Console.Write("File:");
+                        string file9 = Console.ReadLine();
+                        Data.ExecuteSQL("sqlitedatabase.db", Data.DeleteFileCommandString(file9));
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid choice.");
+                        break;
+                }
+
+            }
 
         }
 
@@ -134,7 +215,7 @@ namespace FileSync
         public static List<string> GetRequiredFilesList(string csvPath)
         {
             List<string> requiredFiles = new List<string>();
-
+            
             using (var reader = new StreamReader(csvPath))
             {
                 while (!reader.EndOfStream)
@@ -166,12 +247,11 @@ namespace FileSync
                     {
                         requiredFiles.Add(values[0]);
                     }
-
                 }
             }
             return requiredFiles;
         }
 
-
+        
     }
 }
